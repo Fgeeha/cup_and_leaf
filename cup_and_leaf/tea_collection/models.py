@@ -124,12 +124,12 @@ class TeaPost(models.Model):
         """Возвращает список полей модели с их значениями и метаданными"""
         return [
             {
-                'name': field.name,
-                'value': getattr(self, field.name),
-                'verbose_name': field.verbose_name,
+                "name": field.name,
+                "value": getattr(self, field.name),
+                "verbose_name": field.verbose_name,
             }
             for field in self._meta.fields
-            if field.name != 'id'  # Исключаем поле id
+            if field.name != "id"  # Исключаем поле id
         ]
 
 

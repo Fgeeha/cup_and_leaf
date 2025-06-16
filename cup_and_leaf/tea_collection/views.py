@@ -24,7 +24,7 @@ from .forms import (
     CustomAuthenticationForm,
     TeaPostForm,
 )
-from .models import TeaPost, TeaComment, User
+from .models import TeaPost, TeaComment
 from .utils import send_welcome_email
 
 
