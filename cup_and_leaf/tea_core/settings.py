@@ -18,9 +18,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = (
-    os.getenv("ALLOWED_HOSTS", "").split(",")
-    if os.getenv("ALLOWED_HOSTS")
-    else []
+    os.getenv("ALLOWED_HOSTS", "").split(",") if os.getenv("ALLOWED_HOSTS") else []
 )
 
 # Application definition
@@ -68,9 +66,7 @@ WSGI_APPLICATION = "tea_core.wsgi.application"
 # Database
 DATABASES = {
     "default": {
-        "ENGINE": os.getenv(
-            "DB_ENGINE", "django.db.backends.sqlite3"
-        ),
+        "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.sqlite3"),
         "NAME": os.getenv("DB_NAME", BASE_DIR / "db.sqlite3"),
     }
 }
@@ -99,9 +95,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = os.getenv("STATIC_URL", "static/")
-STATIC_ROOT = os.getenv(
-    "STATIC_ROOT", os.path.join(BASE_DIR, "staticfiles")
-)
+STATIC_ROOT = os.getenv("STATIC_ROOT", os.path.join(BASE_DIR, "staticfiles"))
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
