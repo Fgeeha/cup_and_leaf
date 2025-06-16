@@ -119,6 +119,18 @@ class TeaPost(models.Model):
     def get_absolute_url(self):
         return reverse("tea_collection:tea_post_detail", kwargs={"pk": self.pk})
 
+    def get_fields(self):
+        """Возвращает список полей модели с их значениями и метаданными"""
+        return [
+            {
+                'name': field.name,
+                'value': getattr(self, field.name),
+                'verbose_name': field.verbose_name,
+            }
+            for field in self._meta.fields
+            if field.name != 'id'  # Исключаем поле id
+        ]
+
 
 class TeaComment(models.Model):
     text = models.TextField("Текст комментария")

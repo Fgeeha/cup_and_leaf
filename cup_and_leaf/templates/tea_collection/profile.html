@@ -5,8 +5,9 @@
 {% block content %}
 <div class="container py-5">
     <div class="row">
+        <!-- Профиль пользователя -->
         <div class="col-md-4">
-            <div class="card profile-card">
+            <div class="card shadow-sm mb-4">
                 <div class="card-body text-center">
                     <h2 class="card-title mb-4">{{ user.first_name }} {{ user.last_name }}</h2>
                     <p class="text-muted mb-1">{{ user.email }}</p>
@@ -16,23 +17,27 @@
             </div>
         </div>
         
+        <!-- Посты и комментарии -->
         <div class="col-md-8">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h3 class="mb-0">Мои посты о чае</h3>
+            <!-- Мои посты -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-cup-hot"></i> Мои посты о чае
+                    </h3>
                 </div>
                 <div class="card-body">
                     {% if tea_posts %}
                         <div class="row">
                             {% for post in tea_posts %}
                                 <div class="col-md-6 mb-4">
-                                    <div class="card h-100">
+                                    <div class="card h-100 border-0 shadow-sm">
                                         {% if post.image %}
-                                            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+                                            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
                                         {% endif %}
                                         <div class="card-body">
                                             <h5 class="card-title">{{ post.title }}</h5>
-                                            <p class="card-text">{{ post.content|truncatewords:30 }}</p>
+                                            <p class="card-text text-muted">{{ post.content|truncatewords:30 }}</p>
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <small class="text-muted">{{ post.created_at|date:"d.m.Y" }}</small>
                                                 <a href="{% url 'tea_collection:tea_detail' post.pk %}" class="btn btn-sm btn-outline-primary">Читать</a>
@@ -43,38 +48,96 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        <p class="text-muted">У вас пока нет постов о чае.</p>
+                        <div class="text-center py-4">
+                            <i class="bi bi-cup-hot" style="font-size: 3rem; color: #ccc;"></i>
+                            <p class="text-muted mt-3">У вас пока нет постов о чае.</p>
+                            <a href="{% url 'tea_collection:tea_create' %}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> Создать первый пост
+                            </a>
+                        </div>
                     {% endif %}
                 </div>
             </div>
             
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="mb-0">Мои комментарии</h3>
+            <!-- Мои комментарии -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-chat-dots"></i> Мои комментарии
+                    </h3>
                 </div>
                 <div class="card-body">
                     {% if comments %}
                         <div class="list-group">
                             {% for comment in comments %}
-                                <div class="list-group-item">
+                                <div class="list-group-item border-0 shadow-sm mb-3">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">
                                             <a href="{% url 'tea_collection:tea_detail' comment.tea_post.pk %}" class="text-decoration-none">
                                                 {{ comment.tea_post.title }}
                                             </a>
                                         </h5>
-                                        <small class="text-muted">{{ comment.created_at|date:"d.m.Y" }}</small>
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar"></i> {{ comment.created_at|date:"d.m.Y" }}
+                                        </small>
                                     </div>
                                     <p class="mb-1">{{ comment.text }}</p>
                                 </div>
                             {% endfor %}
                         </div>
                     {% else %}
-                        <p class="text-muted">У вас пока нет комментариев.</p>
+                        <div class="text-center py-4">
+                            <i class="bi bi-chat-dots" style="font-size: 3rem; color: #ccc;"></i>
+                            <p class="text-muted mt-3">У вас пока нет комментариев.</p>
+                        </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+.card {
+    border-radius: 15px;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.btn-primary {
+    background-color: #4a6741;
+    border-color: #4a6741;
+}
+
+.btn-primary:hover {
+    background-color: #3a5233;
+    border-color: #3a5233;
+}
+
+.btn-outline-primary {
+    color: #4a6741;
+    border-color: #4a6741;
+}
+
+.btn-outline-primary:hover {
+    background-color: #4a6741;
+    border-color: #4a6741;
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    background-color: rgba(255,255,255,.8);
+}
+
+.list-group-item {
+    border-radius: 10px !important;
+}
+
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+}
+</style>
 {% endblock %} 
