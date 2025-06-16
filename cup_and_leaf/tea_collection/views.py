@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
+from datetime import datetime
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -12,13 +13,11 @@ from django.views.generic import (
     UpdateView,
 )
 from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
 
 from .forms import (
     TeaCommentForm,
-    TeaPostForm,
     UserEditForm,
     CustomUserCreationForm,
     TeaSearchForm,
@@ -66,14 +65,17 @@ class TeaPostListView(ListView):
         context["tea_types"] = TeaPost.TYPE_CHOICES
         context["tea_origins"] = TeaPost.ORIGIN_CHOICES
         context["tea_grades"] = TeaPost.TEA_GRADE_CHOICES
-        context["production_years"] = [(year, year) for year in range(2020, 2025)]
+        current_year = datetime.now().year
+        context["production_years"] = [
+            (year, year) for year in range(2020, current_year + 1)
+        ]
         return context
 
 
 class TeaPostDetailView(DetailView):
     model = TeaPost
     template_name = "tea_collection/tea_post_detail.html"
-    context_object_name = "tea"
+    context_object_name = "tea_post"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -146,6 +148,27 @@ def add_comment(request, pk):
 
 
 @login_required
+def edit_comment(request, pk, comment_pk):
+    comment = get_object_or_404(TeaComment, pk=comment_pk, tea_post_id=pk)
+    if comment.author != request.user:
+        return redirect("tea_collection:tea_detail", pk=pk)
+
+    if request.method == "POST":
+        form = TeaCommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect("tea_collection:tea_detail", pk=pk)
+    else:
+        form = TeaCommentForm(instance=comment)
+
+    return render(
+        request,
+        "tea_collection/comment_form.html",
+        {"form": form, "tea_post": comment.tea_post, "comment": comment},
+    )
+
+
+@login_required
 def edit_profile(request):
     if request.method == "POST":
         form = UserEditForm(request.POST, instance=request.user)
@@ -184,7 +207,7 @@ def register(request):
                     request,
                     f"Добро пожаловать, {user.first_name}! Ваш аккаунт успешно создан.",
                 )
-            except Exception as e:
+            except Exception:
                 messages.warning(
                     request,
                     "Аккаунт создан, но возникла проблема с отправкой приветственного письма.",
@@ -226,9 +249,10 @@ def search_tea(request):
         if query:
             tea_posts = tea_posts.filter(
                 Q(title__icontains=query)
-                | Q(content__icontains=query)
-                | Q(tea_type__icontains=query)
+                | Q(description__icontains=query)
+                | Q(type__icontains=query)
                 | Q(origin__icontains=query)
+                | Q(appearance__icontains=query)
             ).distinct()
 
     paginator = Paginator(tea_posts, 6)

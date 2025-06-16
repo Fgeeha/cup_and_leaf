@@ -13,6 +13,11 @@ urlpatterns = [
     path("tea/<int:pk>/delete/", views.TeaPostDeleteView.as_view(), name="tea_delete"),
     path("tea/<int:pk>/comment/", views.add_comment, name="add_comment"),
     path(
+        "tea/<int:pk>/comment/<int:comment_pk>/edit/",
+        views.edit_comment,
+        name="edit_comment",
+    ),
+    path(
         "tea/<int:pk>/comment/<int:comment_pk>/delete/",
         views.delete_comment,
         name="delete_comment",
