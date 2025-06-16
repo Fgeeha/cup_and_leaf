@@ -87,16 +87,7 @@ class TeaPostDetailView(DetailView):
 class TeaPostCreateView(LoginRequiredMixin, CreateView):
     model = TeaPost
     template_name = "tea_collection/tea_post_form.html"
-    fields = [
-        "title",
-        "type",
-        "origin",
-        "production_year",
-        "tea_grade",
-        "appearance",
-        "description",
-        "image",
-    ]
+    form_class = TeaPostForm
     success_url = reverse_lazy("tea_collection:index")
 
     def form_valid(self, form):
@@ -107,16 +98,7 @@ class TeaPostCreateView(LoginRequiredMixin, CreateView):
 class TeaPostUpdateView(LoginRequiredMixin, UpdateView):
     model = TeaPost
     template_name = "tea_collection/tea_post_form.html"
-    fields = [
-        "title",
-        "type",
-        "origin",
-        "production_year",
-        "tea_grade",
-        "appearance",
-        "description",
-        "image",
-    ]
+    form_class = TeaPostForm
 
     def get_queryset(self):
         return TeaPost.objects.filter(author=self.request.user)
