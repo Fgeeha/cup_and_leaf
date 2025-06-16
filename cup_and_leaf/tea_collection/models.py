@@ -117,7 +117,8 @@ class TeaPost(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("tea_collection:tea_post_detail", kwargs={"pk": self.pk})
+        """Return the URL to this tea post's detail page."""
+        return reverse("tea_collection:tea_detail", kwargs={"pk": self.pk})
 
     def get_fields(self):
         """Возвращает список полей модели с их значениями и метаданными"""
