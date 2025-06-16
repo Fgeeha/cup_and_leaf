@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
+from datetime import datetime
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -64,7 +65,10 @@ class TeaPostListView(ListView):
         context["tea_types"] = TeaPost.TYPE_CHOICES
         context["tea_origins"] = TeaPost.ORIGIN_CHOICES
         context["tea_grades"] = TeaPost.TEA_GRADE_CHOICES
-        context["production_years"] = [(year, year) for year in range(2020, 2025)]
+        current_year = datetime.now().year
+        context["production_years"] = [
+            (year, year) for year in range(2020, current_year + 1)
+        ]
         return context
 
 

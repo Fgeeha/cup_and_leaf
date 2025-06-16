@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.utils.text import slugify
+from datetime import datetime
 from .models import TeaPost, TeaComment
 
 User = get_user_model()
@@ -120,6 +121,12 @@ class UserEditForm(forms.ModelForm):
             "last_name": forms.TextInput(attrs={"class": "form-control"}),
             "email": forms.EmailInput(attrs={"class": "form-control"}),
         }
+        labels = {
+            "username": "Имя пользователя",
+            "first_name": "Имя",
+            "last_name": "Фамилия",
+            "email": "Email",
+        }
 
 
 class TeaPostForm(forms.ModelForm):
@@ -194,9 +201,11 @@ class TeaSearchForm(forms.Form):
         choices=[("", "Все регионы")] + TeaPost.ORIGIN_CHOICES,
         widget=forms.Select(attrs={"class": "form-control"}),
     )
+    current_year = datetime.now().year
     production_year = forms.ChoiceField(
         required=False,
-        choices=[("", "Все годы")] + [(year, year) for year in range(2020, 2025)],
+        choices=[("", "Все годы")]
+        + [(year, year) for year in range(2020, current_year + 1)],
         widget=forms.Select(attrs={"class": "form-control"}),
     )
     tea_grade = forms.ChoiceField(
