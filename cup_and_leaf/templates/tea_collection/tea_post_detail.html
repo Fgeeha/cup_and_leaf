@@ -24,6 +24,22 @@
                             </div>
                         </div>
 
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Информация о чае</h5>
+                        <ul class="list-unstyled">
+                            <li><strong>Тип чая:</strong> {{ tea_post.get_type_display }}</li>
+                            <li><strong>Происхождение:</strong> {{ tea_post.get_origin_display }}</li>
+                            <li><strong>Год производства:</strong> {{ tea_post.production_year }}</li>
+                            <li><strong>Сорт:</strong> {{ tea_post.get_tea_grade_display }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Внешний вид</h5>
+                        <p>{{ tea_post.appearance }}</p>
+                    </div>
+                </div>
+
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
