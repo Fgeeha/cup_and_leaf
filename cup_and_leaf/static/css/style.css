@@ -149,6 +149,7 @@ body {
     border-radius: 16px;
     background: #ffffff;
     transition: all 0.3s ease;
+    margin: 20px 10px;
 }
 
 .card:hover {
@@ -163,7 +164,7 @@ body {
 }
 
 .card-title {
-    color: #ffffff;
+    color: black;
     font-weight: 600;
     font-size: 1.25rem;
     margin: 0;
