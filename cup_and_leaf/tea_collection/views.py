@@ -167,15 +167,6 @@ class CustomLoginView(LoginView):
     form_class = CustomAuthenticationForm
     template_name = "registration/login.html"
 
-    def form_valid(self, form):
-        email = form.cleaned_data.get("username")
-        try:
-            user = User.objects.get(email=email)
-            form.cleaned_data["username"] = user.username
-        except User.DoesNotExist:
-            pass
-        return super().form_valid(form)
-
 
 def register(request):
     if request.method == "POST":

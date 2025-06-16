@@ -104,6 +104,18 @@ class CustomAuthenticationForm(AuthenticationForm):
             raise forms.ValidationError("Пользователь с таким email не найден.")
         return email
 
+    def clean(self):
+        """Authenticate using the user's email address."""
+        email = self.cleaned_data.get("username")
+        if email:
+            try:
+                user = User.objects.get(email=email)
+                self.cleaned_data["username"] = user.username
+            except User.DoesNotExist:
+                # Ошибка будет обработана в clean_username
+                pass
+        return super().clean()
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["username"].label = "Email"
