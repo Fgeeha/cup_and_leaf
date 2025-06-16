@@ -3,8 +3,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from tea_collection.views import logout_view
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("auth/logout/", logout_view, name="logout"),
     path("", include("tea_collection.urls")),
     path("auth/", include("django.contrib.auth.urls")),
     path("pages/", include("pages.urls")),

@@ -12,7 +12,7 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
 
@@ -248,3 +248,9 @@ def search_tea(request):
         "query": request.GET.get("query", ""),
     }
     return render(request, "tea_collection/search_results.html", context)
+
+
+def logout_view(request):
+    """Log out the current user on GET or POST and redirect to the index."""
+    logout(request)
+    return redirect("tea_collection:index")
