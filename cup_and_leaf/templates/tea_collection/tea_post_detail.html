@@ -24,34 +24,18 @@
                             </div>
                         </div>
 
-                        <div class="card mb-4 border-0 bg-light">
-                            <div class="card-body">
-                                <h5 class="card-title border-bottom pb-2 mb-3">Информация о чае</h5>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <ul class="list-unstyled">
-                                            {% for field in tea_post.get_fields %}
-                                                {% if field.name != 'description' and field.name != 'image' and field.name != 'author' and field.name != 'created_at' and field.name != 'updated_at' and field.name != 'title' and field.name != 'appearance' %}
-                                                    <li class="mb-3">
-                                                        <strong>{{ field.verbose_name|title }}:</strong><br>
-                                                        <span class="ms-3">
-                                                            {% if field.name == 'type' %}
-                                                                {{ tea_post.get_type_display }}
-                                                            {% elif field.name == 'origin' %}
-                                                                {{ tea_post.get_origin_display }}
-                                                            {% elif field.name == 'tea_grade' %}
-                                                                {{ tea_post.get_tea_grade_display }}
-                                                            {% else %}
-                                                                {{ field.value }}
-                                                            {% endif %}
-                                                        </span>
-                                                    </li>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <small class="text-muted">
+                            Автор: {{ tea_post.author.username }} | 
+                            Опубликовано: {{ tea_post.created_at|date:"d.m.Y" }}
+                        </small>
+                    </div>
+                    {% if user == tea_post.author %}
+                        <div>
+                            <a href="{% url 'tea_collection:tea_update' tea_post.pk %}" class="btn btn-outline-primary btn-sm">Редактировать</a>
+                            <a href="{% url 'tea_collection:tea_delete' tea_post.pk %}" class="btn btn-outline-danger btn-sm">Удалить</a>
                         </div>
 
                         <div class="card mb-4 border-0 bg-light">
@@ -90,29 +74,37 @@
                 </div>
             </article>
 
-            <section class="comments mt-5">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h3 class="card-title border-bottom pb-2">Комментарии</h3>
-                        
-                        {% if user.is_authenticated %}
-                            <form method="post" action="{% url 'tea_collection:add_comment' tea_post.pk %}" class="mb-4">
-                                {% csrf_token %}
-                                <div class="mb-3">
-                                    {{ comment_form.text.label_tag }}
-                                    {{ comment_form.text }}
+                {% if comments %}
+                    {% for comment in comments %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        {{ comment.author.get_full_name|default:comment.author.username }}
+                                    </h6>
+                                    <small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
                                 </div>
-                                <div class="mb-3">
-                                    {{ comment_form.rating.label_tag }}
-                                    {{ comment_form.rating }}
+                                <p class="card-text">{{ comment.text }}</p>
+                                <div class="d-flex align-items-center mb-2">
+                                    <small class="text-muted me-2">Оценка:</small>
+                                    <div class="text-warning">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= comment.rating %}
+                                                ★
+                                            {% else %}
+                                                ☆
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-chat-dots me-1"></i>Добавить комментарий
-                                </button>
-                            </form>
-                        {% else %}
-                            <div class="alert alert-info">
-                                <i class="bi bi-info-circle me-2"></i>Чтобы оставить комментарий, пожалуйста, <a href="{% url 'login' %}">войдите</a> в систему.
+                                {% if user == comment.author %}
+                                    <div class="d-flex gap-2">
+                                        <a href="{% url 'tea_collection:edit_comment' tea_post.pk comment.pk %}"
+                                           class="btn btn-sm btn-outline-primary">Редактировать</a>
+                                        <a href="{% url 'tea_collection:delete_comment' tea_post.pk comment.pk %}"
+                                           class="btn btn-sm btn-outline-danger">Удалить</a>
+                                    </div>
+                                {% endif %}
                             </div>
                         {% endif %}
 

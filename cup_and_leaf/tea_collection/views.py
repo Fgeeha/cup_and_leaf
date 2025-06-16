@@ -144,6 +144,27 @@ def add_comment(request, pk):
 
 
 @login_required
+def edit_comment(request, pk, comment_pk):
+    comment = get_object_or_404(TeaComment, pk=comment_pk, tea_post_id=pk)
+    if comment.author != request.user:
+        return redirect("tea_collection:tea_detail", pk=pk)
+
+    if request.method == "POST":
+        form = TeaCommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect("tea_collection:tea_detail", pk=pk)
+    else:
+        form = TeaCommentForm(instance=comment)
+
+    return render(
+        request,
+        "tea_collection/comment_form.html",
+        {"form": form, "tea_post": comment.tea_post, "comment": comment},
+    )
+
+
+@login_required
 def edit_profile(request):
     if request.method == "POST":
         form = UserEditForm(request.POST, instance=request.user)
