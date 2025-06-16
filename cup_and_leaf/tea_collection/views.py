@@ -18,7 +18,6 @@ from django.contrib.auth.views import LoginView
 
 from .forms import (
     TeaCommentForm,
-    TeaPostForm,
     UserEditForm,
     CustomUserCreationForm,
     TeaSearchForm,
