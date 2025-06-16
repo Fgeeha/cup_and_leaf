@@ -71,7 +71,7 @@ class TeaPostListView(ListView):
 class TeaPostDetailView(DetailView):
     model = TeaPost
     template_name = "tea_collection/tea_post_detail.html"
-    context_object_name = "tea"
+    context_object_name = "tea_post"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

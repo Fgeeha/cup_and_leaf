@@ -126,13 +126,27 @@ class TeaPostForm(forms.ModelForm):
             "image",
         ]
         widgets = {
-            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "title": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Введите название"}
+            ),
             "type": forms.Select(attrs={"class": "form-control"}),
             "origin": forms.Select(attrs={"class": "form-control"}),
             "production_year": forms.Select(attrs={"class": "form-control"}),
             "tea_grade": forms.Select(attrs={"class": "form-control"}),
-            "appearance": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
-            "description": forms.Textarea(attrs={"class": "form-control", "rows": 4}),
+            "appearance": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 3,
+                    "placeholder": "Опишите внешний вид...",
+                }
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 4,
+                    "placeholder": "Введите описание...",
+                }
+            ),
             "image": forms.FileInput(attrs={"class": "form-control"}),
         }
 

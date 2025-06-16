@@ -44,8 +44,8 @@
                     </div>
                     {% if user == tea_post.author %}
                         <div>
-                            <a href="{% url 'tea_collection:tea_post_update' tea_post.pk %}" class="btn btn-outline-primary btn-sm">Редактировать</a>
-                            <a href="{% url 'tea_collection:tea_post_delete' tea_post.pk %}" class="btn btn-outline-danger btn-sm">Удалить</a>
+                            <a href="{% url 'tea_collection:tea_update' tea_post.pk %}" class="btn btn-outline-primary btn-sm">Редактировать</a>
+                            <a href="{% url 'tea_collection:tea_delete' tea_post.pk %}" class="btn btn-outline-danger btn-sm">Удалить</a>
                         </div>
                     {% endif %}
                 </div>
