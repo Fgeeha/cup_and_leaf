@@ -34,7 +34,7 @@
                                             <p class="card-text">{{ post.content|truncatewords:30 }}</p>
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <small class="text-muted">{{ post.created_at|date:"d.m.Y" }}</small>
-                                                <a href="{% url 'tea_collection:tea_post_detail' post.pk %}" class="btn btn-sm btn-outline-primary">Читать</a>
+                                                <a href="{% url 'tea_collection:tea_detail' post.pk %}" class="btn btn-sm btn-outline-primary">Читать</a>
                                             </div>
                                         </div>
                                     </div>
@@ -58,7 +58,7 @@
                                 <div class="list-group-item">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">
-                                            <a href="{% url 'tea_collection:tea_post_detail' comment.tea_post.pk %}" class="text-decoration-none">
+                                            <a href="{% url 'tea_collection:tea_detail' comment.tea_post.pk %}" class="text-decoration-none">
                                                 {{ comment.tea_post.title }}
                                             </a>
                                         </h5>

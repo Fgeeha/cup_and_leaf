@@ -12,13 +12,11 @@ from django.views.generic import (
     UpdateView,
 )
 from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
 
 from .forms import (
     TeaCommentForm,
-    TeaPostForm,
     UserEditForm,
     CustomUserCreationForm,
     TeaSearchForm,
@@ -73,7 +71,7 @@ class TeaPostListView(ListView):
 class TeaPostDetailView(DetailView):
     model = TeaPost
     template_name = "tea_collection/tea_post_detail.html"
-    context_object_name = "tea"
+    context_object_name = "tea_post"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -184,7 +182,7 @@ def register(request):
                     request,
                     f"Добро пожаловать, {user.first_name}! Ваш аккаунт успешно создан.",
                 )
-            except Exception as e:
+            except Exception:
                 messages.warning(
                     request,
                     "Аккаунт создан, но возникла проблема с отправкой приветственного письма.",
@@ -226,9 +224,10 @@ def search_tea(request):
         if query:
             tea_posts = tea_posts.filter(
                 Q(title__icontains=query)
-                | Q(content__icontains=query)
-                | Q(tea_type__icontains=query)
+                | Q(description__icontains=query)
+                | Q(type__icontains=query)
                 | Q(origin__icontains=query)
+                | Q(appearance__icontains=query)
             ).distinct()
 
     paginator = Paginator(tea_posts, 6)
