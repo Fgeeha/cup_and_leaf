@@ -44,8 +44,8 @@
                     </div>
                     {% if user == tea_post.author %}
                         <div>
-                            <a href="{% url 'tea_collection:tea_post_update' tea_post.pk %}" class="btn btn-outline-primary btn-sm">Редактировать</a>
-                            <a href="{% url 'tea_collection:tea_post_delete' tea_post.pk %}" class="btn btn-outline-danger btn-sm">Удалить</a>
+                            <a href="{% url 'tea_collection:tea_update' tea_post.pk %}" class="btn btn-outline-primary btn-sm">Редактировать</a>
+                            <a href="{% url 'tea_collection:tea_delete' tea_post.pk %}" class="btn btn-outline-danger btn-sm">Удалить</a>
                         </div>
                     {% endif %}
                 </div>
@@ -78,11 +78,13 @@
                         <div class="card mb-3">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
-                                    <h6 class="card-subtitle mb-2 text-muted">{{ comment.author.username }}</h6>
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        {{ comment.author.get_full_name|default:comment.author.username }}
+                                    </h6>
                                     <small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
                                 </div>
                                 <p class="card-text">{{ comment.text }}</p>
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center mb-2">
                                     <small class="text-muted me-2">Оценка:</small>
                                     <div class="text-warning">
                                         {% for i in "12345" %}
@@ -94,6 +96,14 @@
                                         {% endfor %}
                                     </div>
                                 </div>
+                                {% if user == comment.author %}
+                                    <div class="d-flex gap-2">
+                                        <a href="{% url 'tea_collection:edit_comment' tea_post.pk comment.pk %}"
+                                           class="btn btn-sm btn-outline-primary">Редактировать</a>
+                                        <a href="{% url 'tea_collection:delete_comment' tea_post.pk comment.pk %}"
+                                           class="btn btn-sm btn-outline-danger">Удалить</a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     {% endfor %}

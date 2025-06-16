@@ -1,9 +1,8 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
-
-from .models import TeaPost, TeaComment, TeaOrigin, TeaType
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.utils.text import slugify
+from .models import TeaPost, TeaComment
 
 User = get_user_model()
 
@@ -59,7 +58,15 @@ class CustomUserCreationForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"]
-        user.username = self.cleaned_data["email"]  # Используем email как username
+        base_username = slugify(
+            f"{self.cleaned_data['first_name']} {self.cleaned_data['last_name']}"
+        )
+        username = base_username or "user"
+        counter = 1
+        while User.objects.filter(username=username).exists():
+            username = f"{base_username}{counter}"
+            counter += 1
+        user.username = username
         user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
         if commit:
@@ -106,8 +113,9 @@ class CustomAuthenticationForm(AuthenticationForm):
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email"]
+        fields = ["username", "first_name", "last_name", "email"]
         widgets = {
+            "username": forms.TextInput(attrs={"class": "form-control"}),
             "first_name": forms.TextInput(attrs={"class": "form-control"}),
             "last_name": forms.TextInput(attrs={"class": "form-control"}),
             "email": forms.EmailInput(attrs={"class": "form-control"}),
@@ -128,13 +136,27 @@ class TeaPostForm(forms.ModelForm):
             "image",
         ]
         widgets = {
-            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "title": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Введите название"}
+            ),
             "type": forms.Select(attrs={"class": "form-control"}),
             "origin": forms.Select(attrs={"class": "form-control"}),
             "production_year": forms.Select(attrs={"class": "form-control"}),
             "tea_grade": forms.Select(attrs={"class": "form-control"}),
-            "appearance": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
-            "description": forms.Textarea(attrs={"class": "form-control", "rows": 4}),
+            "appearance": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 3,
+                    "placeholder": "Опишите внешний вид...",
+                }
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 4,
+                    "placeholder": "Введите описание...",
+                }
+            ),
             "image": forms.FileInput(attrs={"class": "form-control"}),
         }
 
