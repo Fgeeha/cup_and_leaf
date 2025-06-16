@@ -128,6 +128,12 @@ class UserEditForm(forms.ModelForm):
             "last_name": "Фамилия",
             "email": "Email",
         }
+        help_texts = {
+            "username": (
+                "Обязательное. Не более 150 символов. "
+                "Используйте только буквы, цифры и символы @/./+/-/_."
+            )
+        }
 
 
 class TeaPostForm(forms.ModelForm):
@@ -149,7 +155,9 @@ class TeaPostForm(forms.ModelForm):
             ),
             "type": forms.Select(attrs={"class": "form-control"}),
             "origin": forms.Select(attrs={"class": "form-control"}),
-            "production_year": forms.Select(attrs={"class": "form-control"}),
+            "production_year": forms.NumberInput(
+                attrs={"class": "form-control", "placeholder": "Год производства"}
+            ),
             "tea_grade": forms.Select(attrs={"class": "form-control"}),
             "appearance": forms.Textarea(
                 attrs={
