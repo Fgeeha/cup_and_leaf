@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать {{ tea_post.title }} - Cup & Leaf{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title text-center mb-4">Редактировать чай</h1>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_title" class="form-label">Название чая</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.title.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_description" class="form-label">Описание</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.description.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_tea_type" class="form-label">Тип чая</label>
+                                {{ form.tea_type }}
+                                {% if form.tea_type.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.tea_type.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_origin" class="form-label">Страна происхождения</label>
+                                {{ form.origin }}
+                                {% if form.origin.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.origin.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_brewing_time" class="form-label">Время заваривания</label>
+                                {{ form.brewing_time }}
+                                {% if form.brewing_time.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.brewing_time.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_temperature" class="form-label">Температура заваривания</label>
+                                {{ form.temperature }}
+                                {% if form.temperature.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.temperature.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_taste_notes" class="form-label">Вкусовые ноты</label>
+                        {{ form.taste_notes }}
+                        {% if form.taste_notes.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.taste_notes.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_image" class="form-label">Фото чая</label>
+                        {% if tea_post.image %}
+                        <div class="mb-2">
+                            <img src="{{ tea_post.image.url }}" alt="Текущее фото" class="img-thumbnail" style="max-height: 200px;">
+                        </div>
+                        {% endif %}
+                        {{ form.image }}
+                        {% if form.image.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.image.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        <a href="{% url 'blog:tea_post_detail' tea_post.pk %}" class="btn btn-outline-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

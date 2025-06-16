@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<div class="container main-container">
+    <div class="row">
+        <!-- Фильтры -->
+        <div class="col-md-4 filter">
+            <div class="filter-card">
+                <h3>Фильтры</h3>
+                <form method="get" class="filter-form">
+                    <div class="form-group">
+                        <label for="id_type">Тип чая</label>
+                        <select name="type" id="id_type" class="form-control">
+                            <option value="">Все типы</option>
+                            {% for type in tea_types %}
+                                <option value="{{ type.0 }}" {% if selected_type == type.0 %}selected{% endif %}>
+                                    {{ type.1 }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_origin">Происхождение</label>
+                        <select name="origin" id="id_origin" class="form-control">
+                            <option value="">Все регионы</option>
+                            {% for origin in tea_origins %}
+                                <option value="{{ origin.0 }}" {% if selected_origin == origin.0 %}selected{% endif %}>
+                                    {{ origin.1 }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_production_year">Год производства</label>
+                        <select name="production_year" id="id_production_year" class="form-control">
+                            <option value="">Все годы</option>
+                            {% for year in production_years %}
+                                <option value="{{ year.0 }}" {% if selected_year == year.0 %}selected{% endif %}>
+                                    {{ year.1 }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_tea_grade">Сорт</label>
+                        <select name="tea_grade" id="id_tea_grade" class="form-control">
+                            <option value="">Все сорта</option>
+                            {% for grade in tea_grades %}
+                                <option value="{{ grade.0 }}" {% if selected_grade == grade.0 %}selected{% endif %}>
+                                    {{ grade.1 }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_query">Поиск</label>
+                        <input type="text" name="query" id="id_query" class="form-control" 
+                               value="{{ request.GET.query }}" placeholder="Поиск по названию...">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">Применить фильтры</button>
+                        <a href="{% url 'tea_collection:index' %}" class="btn-reset">Сбросить</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Список чаев -->
+        <div class="col-md-8 results">
+            <div class="tea-list">
+                {% if tea_posts %}
+                    {% for post in tea_posts %}
+                        <div class="tea-card">
+                            <div class="tea-image">
+                                {% if post.image %}
+                                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                {% else %}
+                                    <img src="{% static 'images/default_tea.jpg' %}" alt="Default Tea Image">
+                                {% endif %}
+                            </div>
+                            <div class="tea-content">
+                                <h3>{{ post.title }}</h3>
+                                <div class="tea-details">
+                                    <p><strong>Тип:</strong> {{ post.get_type_display }}</p>
+                                    <p><strong>Происхождение:</strong> {{ post.get_origin_display }}</p>
+                                    <p><strong>Год:</strong> {{ post.get_production_year_display }}</p>
+                                    <p><strong>Сорт:</strong> {{ post.get_tea_grade_display }}</p>
+                                </div>
+                                <div class="tea-actions">
+                                    <a href="{% url 'tea_collection:tea_detail' post.id %}" class="btn-view">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-tea-message">
+                        <p>Чай не найден. Попробуйте изменить параметры поиска.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

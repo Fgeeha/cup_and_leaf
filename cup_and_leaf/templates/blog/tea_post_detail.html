@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tea_post.title }} - Cup & Leaf{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Tea Post Details -->
+        <div class="card mb-4">
+            {% if tea_post.image %}
+            <img src="{{ tea_post.image.url }}" class="card-img-top" alt="{{ tea_post.title }}" style="max-height: 400px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body">
+                <h1 class="card-title">{{ tea_post.title }}</h1>
+                <p class="text-muted">
+                    <small>
+                        <i class="bi bi-person"></i> {{ tea_post.author.username }} |
+                        <i class="bi bi-calendar"></i> {{ tea_post.pub_date|date:"d.m.Y" }} |
+                        <i class="bi bi-tag"></i> {{ tea_post.tea_type.title }} |
+                        <i class="bi bi-geo-alt"></i> {{ tea_post.origin.name }}
+                    </small>
+                </p>
+                <div class="mb-4">
+                    <h5>Описание</h5>
+                    <p>{{ tea_post.description }}</p>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Параметры заваривания</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-clock"></i> Время: {{ tea_post.brewing_time|default:"Не указано" }}</li>
+                            <li><i class="bi bi-thermometer-half"></i> Температура: {{ tea_post.temperature|default:"Не указано" }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Вкусовые ноты</h5>
+                        <p>{{ tea_post.taste_notes|default:"Не указано" }}</p>
+                    </div>
+                </div>
+                {% if user == tea_post.author %}
+                <div class="btn-group">
+                    <a href="{% url 'blog:tea_post_update' tea_post.pk %}" class="btn btn-outline-primary">
+                        <i class="bi bi-pencil"></i> Редактировать
+                    </a>
+                    <a href="{% url 'blog:tea_post_delete' tea_post.pk %}" class="btn btn-outline-danger">
+                        <i class="bi bi-trash"></i> Удалить
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Comments -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Комментарии</h5>
+                {% if user.is_authenticated %}
+                <form method="post" action="{% url 'blog:add_comment' tea_post.pk %}" class="mb-4">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_text" class="form-label">Ваш комментарий</label>
+                        {{ form.text }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_rating" class="form-label">Оценка</label>
+                        {{ form.rating }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                </form>
+                {% else %}
+                <div class="alert alert-info">
+                    <a href="{% url 'login' %}">Войдите</a>, чтобы оставить комментарий
+                </div>
+                {% endif %}
+
+                {% for comment in comments %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="card-subtitle text-muted">
+                                {{ comment.author.username }}
+                                {% if comment.rating %}
+                                <span class="ms-2">
+                                    {% for i in "12345" %}
+                                    <i class="bi bi-star{% if forloop.counter <= comment.rating %}-fill{% endif %} text-warning"></i>
+                                    {% endfor %}
+                                </span>
+                                {% endif %}
+                            </h6>
+                            <small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
+                        </div>
+                        <p class="card-text">{{ comment.text }}</p>
+                        {% if user == comment.author %}
+                        <a href="{% url 'blog:delete_comment' tea_post.pk comment.pk %}" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i> Удалить
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="alert alert-info">
+                    Пока нет комментариев. Будьте первым!
+                </div>
+                {% endfor %}
+
+                <!-- Pagination -->
+                {% if is_paginated %}
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">
+                                <i class="bi bi-chevron-double-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                                <i class="bi bi-chevron-double-right"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Похожие чаи</h5>
+                <div class="list-group list-group-flush">
+                    {% for similar_tea in tea_post.tea_type.tea_posts.all|slice:":5" %}
+                    {% if similar_tea.pk != tea_post.pk %}
+                    <a href="{% url 'blog:tea_post_detail' similar_tea.pk %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ similar_tea.title }}</h6>
+                            <small class="text-muted">{{ similar_tea.origin.name }}</small>
+                        </div>
+                        <small class="text-muted">{{ similar_tea.tea_type.title }}</small>
+                    </a>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

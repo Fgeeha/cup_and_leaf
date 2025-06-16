@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #4a6741 0%, #6b8c61 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #4a6741;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Добро пожаловать в Cup & Leaf!</h1>
+    </div>
+    <div class="content">
+        <p>Здравствуйте, {{ user.first_name }}!</p>
+        <p>Спасибо за регистрацию на нашем сайте. Мы рады приветствовать вас в сообществе любителей чая.</p>
+        <p>Теперь вы можете:</p>
+        <ul>
+            <li>Делиться своими впечатлениями о чае</li>
+            <li>Читать отзывы других пользователей</li>
+            <li>Создавать свою коллекцию чая</li>
+            <li>Общаться с единомышленниками</li>
+        </ul>
+        <p>
+            <a href="{{ site_url }}" class="button">Начать путешествие</a>
+        </p>
+        <p>Если у вас возникнут вопросы, не стесняйтесь обращаться к нам.</p>
+        <p>С уважением,<br>Команда Cup & Leaf</p>
+    </div>
+    <div class="footer">
+        <p>Это письмо отправлено автоматически, пожалуйста, не отвечайте на него.</p>
+    </div>
+</body>
+</html> 

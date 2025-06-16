@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Удалить {{ tea_post.title }} - Cup & Leaf{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h1 class="card-title mb-4">Удалить чай</h1>
+                <p class="lead">Вы уверены, что хотите удалить чай "{{ tea_post.title }}"?</p>
+                <p class="text-muted">Это действие нельзя будет отменить.</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                        <a href="{% url 'blog:tea_post_detail' tea_post.pk %}" class="btn btn-outline-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

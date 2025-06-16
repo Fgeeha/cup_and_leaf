@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Black">
+    <option name="cmdArguments" value="--line-length 69" />
+    <option name="enabledOnReformat" value="true" />
+    <option name="enabledOnSave" value="true" />
+    <option name="pathToExecutable" value="/usr/bin/black" />
+    <option name="sdkName" value="uv (cup_and_leaf)" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="uv (cup_and_leaf)" project-jdk-type="Python SDK" />
+</project>

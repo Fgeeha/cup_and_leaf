@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Коллекция чая - Cup & Leaf{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Filters -->
+    <div class="col-md-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Фильтры</h5>
+                <form method="get" class="mb-3">
+                    <div class="mb-3">
+                        <label for="search" class="form-label">Поиск</label>
+                        <input type="text" class="form-control" id="search" name="q" value="{{ request.GET.q }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="tea_type" class="form-label">Тип чая</label>
+                        <select class="form-select" id="tea_type" name="tea_type">
+                            <option value="">Все типы</option>
+                            {% for type in tea_types %}
+                            <option value="{{ type.slug }}" {% if request.GET.tea_type == type.slug %}selected{% endif %}>
+                                {{ type.title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="origin" class="form-label">Страна происхождения</label>
+                        <select class="form-select" id="origin" name="origin">
+                            <option value="">Все страны</option>
+                            {% for origin in origins %}
+                            <option value="{{ origin.slug }}" {% if request.GET.origin == origin.slug %}selected{% endif %}>
+                                {{ origin.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Применить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tea Posts -->
+    <div class="col-md-9">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for tea_post in tea_posts %}
+            <div class="col">
+                <div class="card h-100">
+                    {% if tea_post.image %}
+                    <img src="{{ tea_post.image.url }}" class="card-img-top" alt="{{ tea_post.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="bi bi-cup-hot" style="font-size: 3rem; color: #ccc;"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ tea_post.title }}</h5>
+                        <p class="card-text text-muted">
+                            <small>
+                                <i class="bi bi-tag"></i> {{ tea_post.tea_type.title }}<br>
+                                <i class="bi bi-geo-alt"></i> {{ tea_post.origin.name }}
+                            </small>
+                        </p>
+                        <p class="card-text">{{ tea_post.description|truncatewords:20 }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{% url 'blog:tea_post_detail' tea_post.pk %}" class="btn btn-primary w-100">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    Чай не найден. Попробуйте изменить параметры поиска.
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.tea_type %}&tea_type={{ request.GET.tea_type }}{% endif %}{% if request.GET.origin %}&origin={{ request.GET.origin }}{% endif %}">
+                        <i class="bi bi-chevron-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.tea_type %}&tea_type={{ request.GET.tea_type }}{% endif %}{% if request.GET.origin %}&origin={{ request.GET.origin }}{% endif %}">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.tea_type %}&tea_type={{ request.GET.tea_type }}{% endif %}{% if request.GET.origin %}&origin={{ request.GET.origin }}{% endif %}">
+                        {{ num }}
+                    </a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.tea_type %}&tea_type={{ request.GET.tea_type }}{% endif %}{% if request.GET.origin %}&origin={{ request.GET.origin }}{% endif %}">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.tea_type %}&tea_type={{ request.GET.tea_type }}{% endif %}{% if request.GET.origin %}&origin={{ request.GET.origin }}{% endif %}">
+                        <i class="bi bi-chevron-double-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 
