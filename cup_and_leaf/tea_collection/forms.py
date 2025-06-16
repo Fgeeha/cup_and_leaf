@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.utils.text import slugify
 from datetime import datetime
-
 from .models import TeaPost, TeaComment
 
 User = get_user_model()
