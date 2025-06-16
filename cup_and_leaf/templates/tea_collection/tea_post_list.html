@@ -50,7 +50,7 @@
                     <span class="tea-origin">{{ tea.origin }}</span>
                 </p>
                 <p class="tea-description">{{ tea.description|truncatewords:30 }}</p>
-                <a href="{% url 'tea_collection:tea_post_detail' tea.pk %}" class="btn btn-outline">Подробнее</a>
+                <a href="{% url 'tea_collection:tea_detail' tea.pk %}" class="btn btn-outline">Подробнее</a>
             </div>
         </div>
         {% empty %}
